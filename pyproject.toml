@@ -1,6 +1,6 @@
 [project]
 name = "google-keep-mcp"
-version = "1.0.0"
+version = "1.0.2"
 description = "MCP Server for Google Keep"
 readme = "README.md"
 requires-python = ">=3.12.11"
@@ -10,7 +10,7 @@ dependencies = [
     "python-dotenv",
 ]
 authors = [
-    { name = "Dave Nicoll", email = "d.nicoll@gmail.com" }
+    { name = "Dave Nicoll", email = "lewkyuqtd@relay.firefox.com" }
 ]
 license = { file = "LICENSE" }
 classifiers = [
