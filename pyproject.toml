@@ -10,7 +10,7 @@ dependencies = [
     "python-dotenv",
 ]
 authors = [
-    { name = "Dave Nicoll", email = "d.nicoll@gmail.com" }
+    { name = "Dave Nicoll", email = "lewkyuqtd@relay.firefox.com" }
 ]
 license = { file = "LICENSE" }
 classifiers = [
