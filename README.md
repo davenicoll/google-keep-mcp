@@ -6,10 +6,14 @@ An MCP server for Google Keep. Apply the power of AI to organize, update, or jus
 
 ### Search/List Operations
 
-- `find` - Search for notes based on a query string
+- `search_by_keyword` - Search notes by keyword against title and text content
+- `search_by_label` - Search notes by label name
+- `find` - Alias for `search_by_keyword` (backwards compatible)
 - `get_pinned_notes` - Get pinned notes (with optional search)
 - `get_archived_notes` - Get archived notes (with optional search)
 - `get_trashed_notes` - Get trashed notes (with optional search)
+
+All search/list operations return notes with `created`, `updated`, and `edited` ISO 8601 timestamps.
 
 ### Add Operations
 
