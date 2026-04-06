@@ -12,9 +12,9 @@ mcp = FastMCP("keep")
 # Search/List Operations
 
 @mcp.tool()
-def find(query="", include_archived: bool = True, include_trashed: bool = False) -> str:
+def search_by_keyword(query="", include_archived: bool = True, include_trashed: bool = False) -> str:
     """
-    Find notes based on a search query.
+    Search notes by keyword against title and text content.
     
     Args:
         query (str, optional): A string to match against the title and text
@@ -22,7 +22,7 @@ def find(query="", include_archived: bool = True, include_trashed: bool = False)
         include_trashed (bool, optional): Include trashed notes in results (default: False)
         
     Returns:
-        str: JSON string containing the matching notes with their id, title, text, pinned status, color and labels
+        str: JSON string containing the matching notes with their id, title, text, pinned status, color, labels and timestamps
     """
     keep = get_client()
     
@@ -42,6 +42,56 @@ def find(query="", include_archived: bool = True, include_trashed: bool = False)
     else:
         # Get only active notes
         notes = keep.find(query=query, archived=False, trashed=False)
+    
+    notes_data = [serialize_note(note) for note in notes]
+    return json.dumps(notes_data)
+
+@mcp.tool()
+def find(query="", include_archived: bool = True, include_trashed: bool = False) -> str:
+    """
+    Find notes based on a search query. Alias for search_by_keyword.
+    
+    Args:
+        query (str, optional): A string to match against the title and text
+        include_archived (bool, optional): Include archived notes in results (default: True)
+        include_trashed (bool, optional): Include trashed notes in results (default: False)
+        
+    Returns:
+        str: JSON string containing the matching notes
+    """
+    return search_by_keyword(query=query, include_archived=include_archived, include_trashed=include_trashed)
+
+@mcp.tool()
+def search_by_label(label_name: str, include_archived: bool = True, include_trashed: bool = False) -> str:
+    """
+    Search notes by label name.
+    
+    Args:
+        label_name (str): The label name to filter by (case-insensitive)
+        include_archived (bool, optional): Include archived notes in results (default: True)
+        include_trashed (bool, optional): Include trashed notes in results (default: False)
+        
+    Returns:
+        str: JSON string containing the matching notes with their id, title, text, pinned status, color, labels and timestamps
+    """
+    keep = get_client()
+    
+    label = keep.findLabel(label_name)
+    if not label:
+        return json.dumps([])
+    
+    if include_archived and include_trashed:
+        notes = keep.find(labels=[label])
+    elif include_archived:
+        active_notes = list(keep.find(labels=[label], archived=False, trashed=False))
+        archived_notes = list(keep.find(labels=[label], archived=True, trashed=False))
+        notes = active_notes + archived_notes
+    elif include_trashed:
+        active_notes = list(keep.find(labels=[label], archived=False, trashed=False))
+        trashed_notes = list(keep.find(labels=[label], archived=False, trashed=True))
+        notes = active_notes + trashed_notes
+    else:
+        notes = keep.find(labels=[label], archived=False, trashed=False)
     
     notes_data = [serialize_note(note) for note in notes]
     return json.dumps(notes_data)
