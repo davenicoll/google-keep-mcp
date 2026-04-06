@@ -54,7 +54,10 @@ def serialize_note(note):
         'text': note.text,
         'pinned': note.pinned,
         'color': note.color.value if note.color else None,
-        'labels': [{'id': label.id, 'name': label.name} for label in note.labels.all()]
+        'labels': [{'id': label.id, 'name': label.name} for label in note.labels.all()],
+        'created': note.timestamps.created.isoformat() if note.timestamps.created else None,
+        'updated': note.timestamps.updated.isoformat() if note.timestamps.updated else None,
+        'edited': note.timestamps.edited.isoformat() if note.timestamps.edited else None,
     }
 
  
